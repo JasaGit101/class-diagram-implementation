@@ -4,13 +4,12 @@
 #include <iomanip>
 #include <algorithm>
 #include <map>
-#include <cstdlib> // For rand() and srand()
-#include <ctime>   // For time()
+#include <cstdlib>
+#include <ctime>
 #include <cctype>
 
 using namespace std;
 
-// Forward declaration
 class Order;
 
 vector<Order> orderList;
@@ -60,27 +59,18 @@ public:
     {
         bool found = false;
         for (auto& item : items) {
-            if (item.first.getProductID() == product.getProductID()) {
+            if (item.first.getProductID() == product.getProductID()) 
+            {
                 item.second += quantity;
                 found = true;
                 break;
             }
         }
-        if (!found) {
+        if (!found) 
+        {
             items.push_back({product, quantity});
         }
         totalPrice += product.getPrice() * quantity;
-    }
-
-    void removeProduct(const string& productID)
-    {
-        for (size_t i = 0; i < items.size(); ++i) {
-            if (items[i].first.getProductID() == productID) {
-                totalPrice -= items[i].first.getPrice() * items[i].second;
-                items.erase(items.begin() + i);
-                break;
-            }
-        }
     }
 
     double getTotalPrice() const { return totalPrice; }
@@ -137,12 +127,12 @@ public:
         : orderID(id), customer(cust), orderDate(date), products(prodList)
     {
         totalAmount = 0;
-        for (const auto& p : products) {
+        for (const auto& p : products) 
+        {
             totalAmount += p.first.getPrice() * p.second;
         }
     }
 
-    // To generate invoice
     void generateInvoice() const
     {
         cout << "=========================" << endl;
@@ -155,7 +145,8 @@ public:
         cout << setw(12) << "Product ID" << setw(25) << "Name" << setw(10) << "Price" << setw(10) << "Quantity" << "Total" << endl;
         cout << "----------------------------------------------" << endl;
 
-        for (const auto& p : products) {
+        for (const auto& p : products) 
+        {
             cout << setw(12) << p.first.getProductID()
                  << setw(25) << p.first.getName()
                  << setw(10) << fixed << setprecision(2) << p.first.getPrice()
@@ -168,10 +159,12 @@ public:
     }
 };
 
-string toUpperCase(const string& str) {
+string toUpperCase(const string& str) 
+{
     string result;
     result.reserve(str.size());
-    for (char ch : str) {
+    for (char ch : str) 
+    {
         result.push_back(std::toupper(static_cast<unsigned char>(ch)));
     }
     return result;
@@ -188,15 +181,18 @@ void viewProducts(vector<Product>& products, ShoppingCart& cart)
 
     // Group products by category and print headers
     map<string, vector<Product>> productsByCategory;
-    for (const auto& product : products) {
+    for (const auto& product : products) 
+    {
         productsByCategory[product.getCategory()].push_back(product);
     }
 
-    for (const auto& categoryPair : productsByCategory) {
+    for (const auto& categoryPair : productsByCategory) 
+    {
         cout << endl << categoryPair.first << endl;
         cout << "-------------------------" << endl;
 
-        for (const auto& product : categoryPair.second) {
+        for (const auto& product : categoryPair.second) 
+        {
             cout << setw(12) << product.getProductID()
                  << setw(25) << product.getName()
                  << setw(10) << fixed << setprecision(2) << product.getPrice()
@@ -209,7 +205,8 @@ void viewProducts(vector<Product>& products, ShoppingCart& cart)
     string productID;
     char addAnother;
 
-    do {
+    do 
+    {
         cout << "Enter the ID of the product you want to add to the shopping cart (or enter -1 to cancel): ";
         cin >> productID;
 
@@ -217,7 +214,8 @@ void viewProducts(vector<Product>& products, ShoppingCart& cart)
         productID = toUpperCase(productID);
 
         // Check if the user wants to cancel
-        if (productID == "-1") {
+        if (productID == "-1") 
+        {
             cout << "Returning to menu..." << endl;
             return;  // Exit the function and return to the menu
         }
@@ -230,11 +228,14 @@ void viewProducts(vector<Product>& products, ShoppingCart& cart)
 
         if (it != products.end())
         {
-            if (it->getStockQuantity() > 0) {
+            if (it->getStockQuantity() > 0) 
+            {
                 cart.addProduct(*it, 1); // Add product with default quantity 1
                 it->decreaseStock(1); // Decrease stock quantity
                 cout << "Product added successfully!" << endl;
-            } else {
+            } 
+            else 
+            {
                 cout << "Product is out of stock!" << endl;
             }
         }
@@ -244,18 +245,23 @@ void viewProducts(vector<Product>& products, ShoppingCart& cart)
         }
 
         // Prompt for adding another product
-        do {
+        do 
+        {
             cout << "Do you want to add another product? (Y/N): ";
             cin >> addAnother;
 
             if (addAnother == 'Y' || addAnother == 'y' || addAnother == 'N' || addAnother == 'n') {
-                break; // Exit the loop if input is valid
-            } else {
+                break;
+            } 
+            else 
+            {
                 cout << "Invalid input. Please enter Y or N." << endl;
             }
-        } while (addAnother != 'Y' && addAnother != 'y' && addAnother != 'N' && addAnother != 'n');
+        } 
+        while (addAnother != 'Y' && addAnother != 'y' && addAnother != 'N' && addAnother != 'n');
 
-    } while (addAnother == 'Y' || addAnother == 'y');
+    } 
+    while (addAnother == 'Y' || addAnother == 'y');
 }
 
 void viewShoppingCart(ShoppingCart& cart, Customer& customer)
@@ -299,10 +305,10 @@ void viewShoppingCart(ShoppingCart& cart, Customer& customer)
             orderList.push_back(newOrder);
 
             // Clear the cart after checkout
-            cart = ShoppingCart(cart.getCartID()); // Reset the cart (could also implement a clear method in ShoppingCart)
+            cart = ShoppingCart(cart.getCartID()); 
 
             cout << "You have successfully checked out the products!" << endl;
-            return; // Exit the function after successful checkout
+            return;
         }
         else if (checkOut == 'N' || checkOut == 'n')
         {
@@ -313,7 +319,8 @@ void viewShoppingCart(ShoppingCart& cart, Customer& customer)
         {
             cout << "Invalid input. Please enter Y or N." << endl;
         }
-    } while (checkOut != 'Y' && checkOut != 'y' && checkOut != 'N' && checkOut != 'n');
+    } 
+    while (checkOut != 'Y' && checkOut != 'y' && checkOut != 'N' && checkOut != 'n');
 }
 
 void placeOrder(Customer& customer, ShoppingCart& cart)
@@ -336,12 +343,10 @@ void placeOrder(Customer& customer, ShoppingCart& cart)
     cout << "Order viewed successfully!" << endl;
 }
 
-
 int main()
 {
     srand(static_cast<unsigned>(time(0)));  // Seed random number generator
 
-    // Sample products
     vector<Product> products = {
         Product("P001", "iPhone 14 Pro Max", 89990, rand() % 50 + 1, "Electronics"),
         Product("P002", "Samsung Galaxy S23 Ultra", 74990, rand() % 50 + 1, "Electronics"),
@@ -415,7 +420,8 @@ int main()
         default:
             cout << "Invalid option. Please try again." << endl;
         }
-    } while (option != 4);
+    } 
+    while (option != 4);
 
     return 0;
 }
